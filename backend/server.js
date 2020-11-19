@@ -1,10 +1,13 @@
 const express = require("express");
+const cors = require("cors");
 const products = require("./data/products");
 
 const app = express();
 
+app.use(cors());
+
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.send("API is running great...");
 });
 
 app.get("/api/products", (req, res) => {
