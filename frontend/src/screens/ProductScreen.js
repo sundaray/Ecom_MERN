@@ -8,9 +8,12 @@ const ProductScreen = ({ match }) => {
   const { id } = match.params;
 
   const product = useSelector((state) =>
-    state.producta.products.find((product) => product._id === id)
+    state.products.products.find((p) => p._id === id)
   );
 
+  if (!product) {
+    return <div>No Product Found!</div>;
+  }
   return (
     <>
       <Link className="btn btn-light my-3" to="/">
@@ -70,5 +73,4 @@ const ProductScreen = ({ match }) => {
     </>
   );
 };
-
 export default ProductScreen;
