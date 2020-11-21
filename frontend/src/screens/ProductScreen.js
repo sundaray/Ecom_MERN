@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Row, Col, Card, Image, ListGroup, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Image,
+  ListGroup,
+  Button,
+  Form,
+} from "react-bootstrap";
 import Rating from "../components/Rating";
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ match, history }) => {
   const { id } = match.params;
+
+  const [qty, setQty] = useState(1);
+
+  const addToCartHandler = () => {
+    history.push(`/cart/${id}?qty=${qty}`);
+  };
 
   const product = useSelector((state) =>
     state.products.products.find((p) => p._id === id)
@@ -57,8 +71,29 @@ const ProductScreen = ({ match }) => {
                   </Col>
                 </Row>
               </ListGroup.Item>
+              {product.countInStock > 0 && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Qty:</Col>
+                    <Col>
+                      <Form.Control
+                        as="select"
+                        value={qty}
+                        onChange={(e) => setQty(e.target.value)}
+                      >
+                        {[...Array(product.countInStock).keys()].map((num) => (
+                          <option key={num + 1} value={num + 1}>
+                            {num + 1}
+                          </option>
+                        ))}
+                      </Form.Control>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
               <ListGroup.Item>
                 <Button
+                  onClick={addToCartHandler}
                   className="btn-block"
                   type="button"
                   disabled={product.countInStock === 0}
