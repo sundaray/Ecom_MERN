@@ -17,14 +17,13 @@ const ProductScreen = ({ match, history }) => {
 
   const [qty, setQty] = useState(1);
 
-  const addToCartHandler = () => {
-    history.push(`/cart/${id}?qty=${qty}`);
-  };
-
   const product = useSelector((state) =>
     state.products.products.find((p) => p._id === id)
   );
 
+  const addToCartHandler = () => {
+    history.push(`/cart/${id}?qty=${qty}`);
+  };
   if (!product) {
     return <div>No Product Found!</div>;
   }
