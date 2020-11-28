@@ -5,8 +5,9 @@ const initialState = {
   cartItems: [],
 };
 
-export const cartItemsAdded = (id, qty) =>
-  createAsyncThunk("cart/cartItemsAdded", async () => {
+export const cartItemsAdded = createAsyncThunk(
+  "cart/cartItemsAdded",
+  async ({ id, qty }) => {
     const { data } = await axios.get(`/api/products/${id}`);
     return {
       product: data._id,
@@ -16,18 +17,35 @@ export const cartItemsAdded = (id, qty) =>
       countInStock: data.countInStock,
       qty,
     };
-  });
+  }
+);
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
-  reducers: {},
+  reducers: {
+    cartItemsRemoved: {
+      reducer(state, action) {
+        state.cartItems = state.cartItems.filter(
+          (x) => x.product !== action.payload
+        );
+      },
+    },
+  },
   extraReducers: {
     [cartItemsAdded.fulfilled]: (state, action) => {
-      //cartItems array should be updated after the following line, but it is not getting updated with the payload.
-      state.cartItems = [...state.cartItems, action.payload];
+      const item = action.payload;
+      const existItem = state.cartItems.find((x) => x.product === item.product);
+      if (existItem) {
+        state.cartItems.map((x) =>
+          x.product === existItem.product ? item : x
+        );
+      } else {
+        state.cartItems = [...state.cartItems, action.payload];
+      }
     },
   },
 });
 
+export const { cartItemsRemoved } = cartSlice.actions;
 export default cartSlice.reducer;
