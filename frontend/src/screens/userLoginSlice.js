@@ -29,7 +29,7 @@ export const userLoginSlice = createSlice({
   reducers: {
     userLogout: {
       reducer(state, action) {
-        state = {};
+        delete state.userInfo;
       },
     },
   },
@@ -48,6 +48,6 @@ export const userLoginSlice = createSlice({
   },
 });
 
-export const { logout } = userLoginSlice.actions;
+export const { userLogout } = userLoginSlice.actions;
 
 export default userLoginSlice.reducer;
